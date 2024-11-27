@@ -51,6 +51,10 @@ namespace _2024._11._27
                     ColumnDefinition firstcol = new ColumnDefinition();
                     ColumnDefinition secondtcol = new ColumnDefinition();
                     onegrid.RowDefinitions.Add(firstrow);
+
+
+
+
       
                     onegrid.RowDefinitions.Add(thirdrow);
                     onegrid.ColumnDefinitions.Add(firstcol);
