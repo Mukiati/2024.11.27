@@ -22,6 +22,9 @@ namespace _2024._11._27
     /// </summary>
     public partial class MainWindow : Window
     {
+        int numofalma = 0;
+        int dragabbalma = 0;
+        int olcsobbalma = int.MaxValue;
         public MainWindow()
         {
             InitializeComponent();
@@ -37,8 +40,22 @@ namespace _2024._11._27
                 HttpResponseMessage response = await client.GetAsync(url);
                 string stringResponse = await response.Content.ReadAsStringAsync();
                 List<almaclass> almalist = JsonConvert.DeserializeObject<List<almaclass>>(stringResponse);
+                 numofalma = 0;
+                 dragabbalma = 0;
+                 olcsobbalma = int.MaxValue;
                 foreach (almaclass item in almalist)
                 {
+                    numofalma++;
+                    if (olcsobbalma > item.price)
+                    {
+                        olcsobbalma = item.price;
+                        
+                    }
+                    if (dragabbalma < item.price)
+                    {
+                        dragabbalma = item.price;
+                       
+                    }
                     Border oneborder = new Border();
                     almak.Children.Add(oneborder);
                     Grid onegrid = new Grid();
@@ -76,6 +93,34 @@ namespace _2024._11._27
                     almaneev.Text = $"Név: {item.type}";
                     almaaar.Text = $"Ára: {item.price}";
                     sell.Content = "Eladás";
+                    sell.Click += async (s, e) => {
+                        HttpClient delclient = new HttpClient();
+                        string delurl = "http://127.1.1.1:4444/alma";
+                        try
+                        {
+                            var jsonObject = new
+                            {
+                                id = item.id
+                            };
+                            string jsonString = JsonConvert.SerializeObject(jsonObject);
+                            HttpRequestMessage request = new HttpRequestMessage();
+                            request.Method = HttpMethod.Delete;
+                            request.RequestUri = new Uri(delurl);
+                            request.Content = new StringContent(jsonString, Encoding.UTF8,"application/json");
+                            HttpResponseMessage delresponse = await client.SendAsync(request);
+                            delresponse.EnsureSuccessStatusCode();
+                            almak.Children.Remove(oneborder);
+
+
+                        }
+                        catch (Exception error)
+                        {
+
+                            MessageBox.Show(error.Message);
+                        }
+
+                    };
+
 
                     oneborder.Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#484848"));
                     oneborder.Margin = new Thickness(5);
@@ -85,6 +130,9 @@ namespace _2024._11._27
                     almaneev.Foreground = new SolidColorBrush(Color.FromRgb(255, 255, 255));
                     almaaar.Foreground = new SolidColorBrush(Color.FromRgb(255, 255, 255));
                 }
+                almadb.Text = numofalma + "DB";
+                almamin.Text = olcsobbalma + "Ft";
+                almamax.Text = dragabbalma + "Ft";
             }
             catch (Exception e)
             {
@@ -93,6 +141,8 @@ namespace _2024._11._27
             }
 
         }
+       
+       
         async void Addapple(object s, EventArgs e)
         {
             HttpClient client = new HttpClient();
