@@ -5,13 +5,14 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:_2024._11._27"
         mc:Ignorable="d"
-        Title="MainWindow" Height="400" Width="600">
+        Title="MainWindow" Height="500" Width="900">
     <Grid Background="#191919">
         <Grid.RowDefinitions>
             <RowDefinition/>
             <RowDefinition/>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
+            <ColumnDefinition/>
             <ColumnDefinition/>
             <ColumnDefinition/>
         </Grid.ColumnDefinitions>
@@ -34,9 +35,25 @@
                     </Grid.ColumnDefinitions>
                     <TextBlock Foreground="White" TextAlignment="Center" VerticalAlignment="Center" FontSize="20" Grid.Row="0" Grid.Column="0"  Name="almanev">NÉV:</TextBlock>
                     <TextBlock Foreground="White" TextAlignment="Center" VerticalAlignment="Center" FontSize="20" Grid.Row="1" Grid.Column="0"  Name="almaar">ÁR:</TextBlock>
-                    <Button Grid.Row="2" Grid.ColumnSpan="2" Margin="50 10" Click="Addapple">HOZZÁADÁS</Button>
-                    <TextBox Grid.Column="1" Grid.Row="0" Margin="10" Name="almanevv"></TextBox>
-                    <TextBox Grid.Column="1" Grid.Row="1" Margin="10" Name="almaarv"></TextBox>
+                    <Button Grid.Row="2" Grid.ColumnSpan="2" Margin="50 15" Click="Addapple">HOZZÁADÁS</Button>
+                    <TextBox Grid.Column="1" Grid.Row="0" Margin="10 15" Name="almanevv"></TextBox>
+                    <TextBox Grid.Column="1" Grid.Row="1" Margin="10 15" Name="almaarv"></TextBox>
+                </Grid>
+            </Border>
+        </Grid>
+        <Grid Grid.Column="2">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="30"/>
+                <RowDefinition/>
+            </Grid.RowDefinitions>
+            <TextBlock Foreground="White" TextAlignment="Center" VerticalAlignment="Center" FontSize="20" Grid.Row="0">Alma keresése</TextBlock>
+            <Border Grid.Row="1" Margin="10" CornerRadius="25" Padding="10" Background="282828">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                    </Grid.RowDefinitions>
                 </Grid>
             </Border>
         </Grid>
@@ -70,10 +87,10 @@
            
 
         </Grid>
-        <Border Grid.Row="1" Grid.ColumnSpan="2" Background="#282828" Margin="10" CornerRadius="25" Padding="10">
-            <StackPanel Orientation="Horizontal" Name="almak">
+        <Border Grid.Row="1" Grid.ColumnSpan="3" Background="#282828" Margin="10" CornerRadius="25" Padding="10">
+            <WrapPanel Orientation="Horizontal" Name="almak">
                 <TextBlock/>
-            </StackPanel>
+            </WrapPanel>
         </Border>
     </Grid>
 

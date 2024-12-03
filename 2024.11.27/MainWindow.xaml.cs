@@ -23,8 +23,12 @@ namespace _2024._11._27
     public partial class MainWindow : Window
     {
         int numofalma = 0;
+        string maxnevalma = "";
         int dragabbalma = 0;
+        string minnevalma = "";
         int olcsobbalma = int.MaxValue;
+        int borderhight = -1;
+        int allborderwidth = 0;
         public MainWindow()
         {
             InitializeComponent();
@@ -49,11 +53,13 @@ namespace _2024._11._27
                     if (olcsobbalma > item.price)
                     {
                         olcsobbalma = item.price;
+                        maxnevalma = item.type;
                         
                     }
                     if (dragabbalma < item.price)
                     {
                         dragabbalma = item.price;
+                        minnevalma = item.type;
                        
                     }
                     Border oneborder = new Border();
@@ -110,8 +116,15 @@ namespace _2024._11._27
                             HttpResponseMessage delresponse = await client.SendAsync(request);
                             delresponse.EnsureSuccessStatusCode();
                             almak.Children.Remove(oneborder);
-
-
+                            almalist.Remove(item);
+                            numofalma = almalist.Count;
+                            olcsobbalma = almalist.Min(x => x.price);
+                            dragabbalma = almalist.Max(x => x.price);
+                            almadb.Text = numofalma + "DB";
+                            //almamin.Text = olcsobbalma + "Ft"+ minnevalma;
+                            //almamax.Text = dragabbalma + "Ft" + maxnevalma;
+                            almamin.Text = maxnevalma;
+                            almamax.Text = minnevalma;
                         }
                         catch (Exception error)
                         {
@@ -120,19 +133,37 @@ namespace _2024._11._27
                         }
 
                     };
-
-
                     oneborder.Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#484848"));
                     oneborder.Margin = new Thickness(5);
                     oneborder.CornerRadius = new CornerRadius(10);
                     oneborder.Padding = new Thickness(5);
+                    
+                    if (borderhight <0)
+                    {
+                       borderhight = (int)oneborder.Height;
+                    }
+                    allborderwidth += (int)oneborder.Width+(int)oneborder.Margin.Left+(int)oneborder.Margin.Right;
 
                     almaneev.Foreground = new SolidColorBrush(Color.FromRgb(255, 255, 255));
                     almaaar.Foreground = new SolidColorBrush(Color.FromRgb(255, 255, 255));
                 }
+                
+
+
+                //wrappanel sor szám:
+                int row = (int)almak.Height / borderhight;
+
+                //wrappanel sor szám szélsség alapján:
+                int Row = (int)Math.Ceiling(allborderwidth / almak.Width);
+
+
+                //almak.Height = Row * borderhight;
+
                 almadb.Text = numofalma + "DB";
-                almamin.Text = olcsobbalma + "Ft";
-                almamax.Text = dragabbalma + "Ft";
+                //almamin.Text = olcsobbalma + "Ft"+ minnevalma;
+                //almamax.Text = dragabbalma + "Ft" + maxnevalma;
+                almamin.Text = maxnevalma;
+                almamax.Text = minnevalma;
             }
             catch (Exception e)
             {
