@@ -29,10 +29,23 @@ namespace _2024._11._27
         int olcsobbalma = int.MaxValue;
         int borderhight = -1;
         int allborderwidth = 0;
+        List<almaclass> allalma = new List<almaclass>();
         public MainWindow()
         {
             InitializeComponent();
             CreateTextBlock();
+        }
+        void searchapple(object s,EventArgs e)
+        {
+            try
+            {
+                almaclass searched = allalma.Where(alma => alma.type == almaneevv.Text).First();
+                search.Text = "Alam ára: " + searched.price;
+            }
+            catch (Exception error)
+            {
+                MessageBox.Show(error.Message);
+            }
         }
         async void CreateTextBlock()
         {
@@ -43,46 +56,36 @@ namespace _2024._11._27
             {
                 HttpResponseMessage response = await client.GetAsync(url);
                 string stringResponse = await response.Content.ReadAsStringAsync();
-                List<almaclass> almalist = JsonConvert.DeserializeObject<List<almaclass>>(stringResponse);
+                 allalma= JsonConvert.DeserializeObject<List<almaclass>>(stringResponse);
                  numofalma = 0;
                  dragabbalma = 0;
                  olcsobbalma = int.MaxValue;
-                foreach (almaclass item in almalist)
+                foreach (almaclass item in allalma)
                 {
                     numofalma++;
                     if (olcsobbalma > item.price)
                     {
                         olcsobbalma = item.price;
                         maxnevalma = item.type;
-                        
                     }
                     if (dragabbalma < item.price)
                     {
                         dragabbalma = item.price;
                         minnevalma = item.type;
-                       
                     }
                     Border oneborder = new Border();
                     almak.Children.Add(oneborder);
+                    oneborder.Height = 120;
                     Grid onegrid = new Grid();
                     oneborder.Child = onegrid;
-                   
-
                     RowDefinition firstrow = new RowDefinition();
-                 
                     RowDefinition thirdrow = new RowDefinition();
                     ColumnDefinition firstcol = new ColumnDefinition();
                     ColumnDefinition secondtcol = new ColumnDefinition();
                     onegrid.RowDefinitions.Add(firstrow);
-
-
-
-
-      
                     onegrid.RowDefinitions.Add(thirdrow);
                     onegrid.ColumnDefinitions.Add(firstcol);
                     onegrid.ColumnDefinitions.Add(secondtcol);
-
                     TextBlock almaneev = new TextBlock();
                     TextBlock almaaar = new TextBlock();
                     Button sell = new Button();
@@ -91,11 +94,8 @@ namespace _2024._11._27
                     onegrid.Children.Add(almaneev);
                     onegrid.Children.Add(almaaar);
                     onegrid.Children.Add(sell);
-
-                
                     Grid.SetRow(almaaar,1);
                     Grid.SetRow(sell,2);
-
                     almaneev.Text = $"Név: {item.type}";
                     almaaar.Text = $"Ára: {item.price}";
                     sell.Content = "Eladás";
@@ -116,10 +116,10 @@ namespace _2024._11._27
                             HttpResponseMessage delresponse = await client.SendAsync(request);
                             delresponse.EnsureSuccessStatusCode();
                             almak.Children.Remove(oneborder);
-                            almalist.Remove(item);
-                            numofalma = almalist.Count;
-                            olcsobbalma = almalist.Min(x => x.price);
-                            dragabbalma = almalist.Max(x => x.price);
+                            allalma.Remove(item);
+                            numofalma = allalma.Count;
+                            olcsobbalma = allalma.Min(x => x.price);
+                            dragabbalma = allalma.Max(x => x.price);
                             almadb.Text = numofalma + "DB";
                             //almamin.Text = olcsobbalma + "Ft"+ minnevalma;
                             //almamax.Text = dragabbalma + "Ft" + maxnevalma;
@@ -131,34 +131,24 @@ namespace _2024._11._27
 
                             MessageBox.Show(error.Message);
                         }
-
                     };
                     oneborder.Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#484848"));
                     oneborder.Margin = new Thickness(5);
                     oneborder.CornerRadius = new CornerRadius(10);
                     oneborder.Padding = new Thickness(5);
-                    
                     if (borderhight <0)
                     {
                        borderhight = (int)oneborder.Height;
                     }
                     allborderwidth += (int)oneborder.Width+(int)oneborder.Margin.Left+(int)oneborder.Margin.Right;
-
                     almaneev.Foreground = new SolidColorBrush(Color.FromRgb(255, 255, 255));
                     almaaar.Foreground = new SolidColorBrush(Color.FromRgb(255, 255, 255));
                 }
-                
-
-
                 //wrappanel sor szám:
                 int row = (int)almak.Height / borderhight;
-
                 //wrappanel sor szám szélsség alapján:
                 int Row = (int)Math.Ceiling(allborderwidth / almak.Width);
-
-
                 //almak.Height = Row * borderhight;
-
                 almadb.Text = numofalma + "DB";
                 //almamin.Text = olcsobbalma + "Ft"+ minnevalma;
                 //almamax.Text = dragabbalma + "Ft" + maxnevalma;
@@ -170,10 +160,7 @@ namespace _2024._11._27
 
                 MessageBox.Show(e.Message);
             }
-
         }
-       
-       
         async void Addapple(object s, EventArgs e)
         {
             HttpClient client = new HttpClient();
@@ -185,7 +172,6 @@ namespace _2024._11._27
                     type = almanevv.Text,
                     price = almaarv.Text
                 };
-
                 string jsonData = JsonConvert.SerializeObject(jsonObject);
                 StringContent data = new StringContent(jsonData, Encoding.UTF8, "application/json");
 
@@ -202,4 +188,3 @@ namespace _2024._11._27
         }
     }
 }
-
